@@ -1,0 +1,22 @@
+<html>
+<title>spy主页</title>
+<body>
+<h1>欢迎进入spy</h1>
+    <div>
+    <input type="file" name="upload" > <button>确定</button>
+    </div>
+    <br><br>
+    <table>
+        <tr>
+            <td>非法项</td>
+            <td>描述</td>
+        </tr>
+        #foreach(${element} in ${list})
+            <tr>
+                <td>${element.a}</td>
+                <td>${element.b}</td>
+            </tr>
+        #end
+    </table>
+</body>
+</html>
