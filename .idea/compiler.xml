@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="spy" target="1.6" />
+      <module name="spy" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

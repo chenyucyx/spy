@@ -2,11 +2,16 @@
 <title>spy主页</title>
 <body>
 <h1>欢迎进入spy</h1>
-    <div>
-    <input type="file" name="upload" > <button>确定</button>
-    </div>
-    <br><br>
-    <table>
+<h5>文件上传</h5><hr/>
+<form id="file_upload_id" name="file_upload_name" action="<%=root%>/CommonController.jhtml?method=doFileUpload" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="functionId" value="${functionId}"/>
+    <input type="hidden" name="fileType" value="${fileType}"/>
+    <input type="hidden" name="maxSize" value="${maxSize}"/>
+    <div><input type="file" name="file_upload"/></div>
+    <div><input type="submit" value="上传"/></div>
+</form>
+<hr/>
+<table>
         <tr>
             <td>非法项</td>
             <td>描述</td>
