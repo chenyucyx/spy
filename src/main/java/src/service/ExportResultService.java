@@ -3,6 +3,7 @@ package src.service;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 import src.model.Result;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
@@ -19,14 +20,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 /**
  * Created by lihaixin on 2017/6/27.
  */
+@Service
 public class ExportResultService {
 
     public static final Logger logger= LoggerFactory.getLogger(ExportResultService.class);
-    @Resource
+
     private Result result;
     //Excel构造方法(初始化信息) 
     @SuppressWarnings("unchecked")
-    public static void createExcel(List<Result> list){
+    public void createExcel(List<Result> list){
         // 第一步，创建一个webbook，对应一个Excel文件
         HSSFWorkbook wb = new HSSFWorkbook();
         // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet

@@ -1,27 +1,137 @@
 <html>
+<script type="text/javascript" src="/static/js/jquery-3.2.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.form.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/common.css">
 <title>spy主页</title>
 <body>
-<h1>欢迎进入spy</h1>
-<h5>文件上传</h5><hr/>
-<form id="file_upload_id" name="file_upload_name" action="<%=root%>/CommonController.jhtml?method=doFileUpload" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="functionId" value="${functionId}"/>
-    <input type="hidden" name="fileType" value="${fileType}"/>
-    <input type="hidden" name="maxSize" value="${maxSize}"/>
-    <div><input type="file" name="file_upload"/></div>
-    <div><input type="submit" value="上传"/></div>
-</form>
-<hr/>
-<table>
-        <tr>
-            <td>非法项</td>
-            <td>描述</td>
-        </tr>
-        #foreach(${element} in ${list})
-            <tr>
-                <td>${element.a}</td>
-                <td>${element.b}</td>
-            </tr>
+<h1>文件扫描主页</h1>
+<h5>扫描规则选取</h5>
+<div>
+    <select multiple="multiple" id="select1" style="width:100px;height:160px;">
+        #foreach(${rule} in ${ruleList})
+            <option value='${rule.code}'>${rule.desc}</option>
         #end
+    </select>
+
+    <input type="button" id="add" value="选中添加到右边>"/>
+    <input type="button" id="add_all" value="全部添加到右边>>"/>
+
+    <select multiple="multiple" id="select2" style="width: 100px;height:160px;">
+
+    </select>
+
+    <input type="button" id="remove" value="选中删除到左边<"/>
+    <input type="button" id="remove_all" value="全部删除到左边<<"/>
+</div>
+<hr/>
+
+<h5>文件上传</h5>
+<form id="file_upload_id" name="file_upload_name" action="/upload" method="post" enctype="multipart/form-data">
+    <div>
+        <input type="file" name="file_upload" value=""/>&nbsp;&nbsp;&nbsp;<input type="button" id="uploadFile" value="上传">
+    </div>
+</form>
+<div>
+    <table id="fileTable"></table>
+</div>
+<hr/>
+<div>
+    <input type="button" id="scan" value="开始扫描">
+</div>
+<hr/>
+
+<h5>扫描结果</h5>
+<div>
+    <table id="scanTable" class="imagetable" style="width: 600px;">
+
     </table>
+<br>
+    <input type="button" value="扫描结果导出" id="export" style="display: none">
+</div>
+<div>${scanResult}</div>
 </body>
+
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        //移动到右边
+        $("#add").click(function () {
+            //获取选中的项,删除然后再移动到右边,这里是选择移动;
+            $('#select1 option:selected').appendTo('#select2');
+        });
+        //移动到左边
+        $("#remove").click(function () {
+            $('#select2 option:selected').appendTo('#select1');
+        })
+        //全部到右边
+        $("#add_all").click(function () {
+            $('#select1 option').appendTo('#select2');
+        })
+        //全部到左边
+        $("#remove_all").click(function () {
+            $('#select2 option').appendTo('#select1');
+        })
+        //双击选项
+        $('#select1').dblclick(function () {
+            //这里先定位#select1这个大的选择框,然后定位到里面的被选择的元素组陈的集合
+            //this就是表示这个集合,当我们按Ctrl或者shift的时候,我们操作的就是这个集合
+            //$("option:selected",this).appendTo("#select2");
+            $("option:selected", this).appendTo("#select2");
+        })
+        //双击选项
+        $('#select2').dblclick(function () {
+            $("option:selected", this).appendTo("#select1");
+        })
+
+        $('#uploadFile').click(function () {
+            var form = $('#file_upload_id');
+            var options = {
+                dataType: "json",
+                data: {'file': $("input[type=file]").val()},
+                beforeSubmit: function () {
+                    //alert("正在上传");
+                },
+                success: function (result) {
+                    $('#fileTable').empty();   //清空
+                    var html = '';
+                    $.each(result, function (fileIndex, file) {
+                        html += '<tr><td>' + file['fileName'] + '</td></tr>';
+                    });
+                    $('#fileTable').html(html);
+                },
+                error: function (result) {
+                    alert('上传失败！');
+                }
+            };
+            form.ajaxSubmit(options);
+        });
+
+        $('#scan').click(function () {
+            var rules = $("#select2").val().toString();
+            if(rules==null || rules==""){
+                alert("请选择扫描规则！");
+                return;
+            }
+            $.ajax({
+                type: "post",
+                url: "/scan",
+                data: {"rules": $("#select2").val().toString()},
+                dataType: "json",
+                success: function (data) {
+                    $('#fileTable').empty();
+                    $('#scanTable').empty();   //清空
+                    var html = '<tr><th>非法项</th><th>描述</th></tr>';
+                    $.each(data, function (resultIndex, result) {
+                        html += '<tr><td>' + result['bugType'] + '</td><td>' + result['description'] + '</td></tr>';
+                    });
+                    $('#scanTable').html(html);
+                    $('#export').css('display', 'block');
+
+                }
+            });
+        });
+
+    });
+
+</script>
+
 </html>

@@ -5,7 +5,10 @@ package src.rule;
  */
 public enum RuleDefinition {
 
-    SERIALIZABLE(1,"维护序列化的兼容性");
+    SERIALIZABLE(1, "序列化规范"),
+    SQLINJECT(2, "SQL注入"),
+    XMLINJECT(3, "XML注入"),
+    ORDERINJECT(4, "命令注入");
 
     private Integer code;
     private String desc;

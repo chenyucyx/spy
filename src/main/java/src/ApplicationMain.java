@@ -6,10 +6,11 @@ package src; /**
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 
-@SpringBootApplication
+@SpringBootApplication(exclude = MongoAutoConfiguration.class)
 @ComponentScan(basePackageClasses = ApplicationMain.class)
 public class ApplicationMain {
     public static void main(String[] args) {
