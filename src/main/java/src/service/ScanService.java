@@ -3,12 +3,19 @@ package src.service;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.springframework.stereotype.Service;
 import src.model.Result;
-import src.rule.RuleDefinition;
+import src.model.RuleDefinition;
+import src.rule.CommandInject;
+import src.rule.FilePathCanonical;
+import src.rule.MethodVisitor;
+import src.rule.PasswordHardCode;
+import src.rule.SerializeVisitor;
+import src.rule.SpringBootSpELInject;
+import src.rule.SqlInject;
+import src.rule.XXEInject;
 import src.utils.JdtAstUtil;
 
+import javax.annotation.Resource;
 import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,11 +24,25 @@ import java.util.List;
  * Created by chenyu on 2017/6/26.
  */
 @Service
-public class ScanService implements Serializable {
+public class ScanService {
 
-    private String serialVersionUI;
-    private String name2;
-    // private List<Result> errorList = new ArrayList<>();
+    @Resource
+    private CommandInject commandInject;
+
+    @Resource
+    private SqlInject sqlInject;
+
+    @Resource
+    private XXEInject xXEInject;
+
+    @Resource
+    private FilePathCanonical filePathCanonical;
+
+    @Resource
+    private PasswordHardCode passwordHardCode;
+
+    @Resource
+    private SpringBootSpELInject springBootSpELInject;
 
     /* 指定文件路径，采用ast方式访问*/
     public List<Result> visitorFile(String path, List<Result> errorList, List<String> ruleList) {
@@ -30,9 +51,21 @@ public class ScanService implements Serializable {
             //System.out.println(file.getName());
             CompilationUnit comp = JdtAstUtil.getCompilationUnit(path);
             if (ruleList.contains(RuleDefinition.SERIALIZABLE.getCode().toString())) {
-                SpyVisitor visitor = new SpyVisitor(file.getName(), file.getPath());
+                SerializeVisitor visitor = new SerializeVisitor(file.getName(), file.getPath());
                 comp.accept(visitor);
                 errorList.addAll(visitor.getResultList());
+            } else if (ruleList.contains(RuleDefinition.COMMANDINJECT.getCode().toString())) {
+                errorList.addAll(commandInject.commandScan(file));
+            } else if (ruleList.contains(RuleDefinition.SQLINJECT.getCode().toString())) {
+                errorList.addAll(sqlInject.sqlScan(file));
+            } else if (ruleList.contains(RuleDefinition.XXEINJECT.getCode().toString())) {
+                errorList.addAll(xXEInject.XXEInjectScan(file));
+            } else if (ruleList.contains(RuleDefinition.FILENOTSECURE.getCode().toString())) {
+                errorList.addAll(filePathCanonical.filePathScan(file));
+            } else if (ruleList.contains(RuleDefinition.PASSWORDHARDCODE.getCode().toString())) {
+                errorList.addAll(passwordHardCode.pswordHardScan(file));
+            } else if (ruleList.contains(RuleDefinition.SPRINGBOOTSPELINJECT.getCode().toString())) {
+                errorList.addAll(springBootSpELInject.springSpELScan(file));
             }
             file.delete();
         } else {
@@ -41,16 +74,12 @@ public class ScanService implements Serializable {
         return errorList;
     }
 
-/*    public static void main(String[] args) {
-        List<Result> info = visitorFile("D:\\workspace\\spy\\src");
-        info.stream().forEach(result -> {
-            System.out.println("illeage error: line=" + result.getLineNumber() +
-                    "\n filePath=" + result.getFileDirt() +
-                    "\n fileName=" + result.getFileName() +
-                    "\n bugType=" + result.getBugType() +
-                    "\n desc=" + result.getDescription());
-        });
-
-    }*/
+    public static void main(String[] args) {
+        CompilationUnit comp = JdtAstUtil.getCompilationUnit("D:\\workspace\\spy\\src\\main\\java\\src\\service\\ScanService.java");
+        MethodVisitor methodVisitor = new MethodVisitor();
+        String a = "", b = "";
+        a = b + "fsfa";
+        comp.accept(methodVisitor);
+    }
 
 }

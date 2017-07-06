@@ -1,4 +1,4 @@
-package src.rule;
+package src.model;
 
 /**
  * Created by chenyu on 2017/6/27.
@@ -7,8 +7,11 @@ public enum RuleDefinition {
 
     SERIALIZABLE(1, "序列化规范"),
     SQLINJECT(2, "SQL注入"),
-    XMLINJECT(3, "XML注入"),
-    ORDERINJECT(4, "命令注入");
+    XXEINJECT(3, "XXE注入"),
+    COMMANDINJECT(4, "命令注入"),
+    PASSWORDHARDCODE(5, "密码硬编码"),
+    FILENOTSECURE(6,"文件不安全访问"),
+    SPRINGBOOTSPELINJECT(7,"springboot版本不安全");
 
     private Integer code;
     private String desc;

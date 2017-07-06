@@ -1,26 +1,21 @@
-package src.service;
+package src.rule;
 
-import jdk.internal.org.objectweb.asm.Handle;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import src.model.Result;
-import src.rule.RuleDefinition;
+import src.model.RuleDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 
 /**
  * Created by chenyu on 2017/6/27.
  */
-public class SpyVisitor extends ASTVisitor {
+public class SerializeVisitor extends ASTVisitor {
 
     private List resultList = new ArrayList<Result>();
 
@@ -52,7 +47,7 @@ public class SpyVisitor extends ASTVisitor {
         return true;
     }*/
 
-    public SpyVisitor(String fileName, String filePath) {
+    public SerializeVisitor(String fileName, String filePath) {
         this.fileName = fileName;
         this.filePath = filePath;
     }

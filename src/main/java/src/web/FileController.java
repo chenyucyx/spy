@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import src.model.Result;
 import src.model.ScanFile;
 import src.service.ExportResultService;
 
@@ -16,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by chenyu on 2017/7/3.
@@ -53,6 +50,7 @@ public class FileController {
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void export(HttpServletRequest request, ModelMap modelMap) {
 
+        System.out.println("aaa");
         //exportResultService.createExcel(list);
 
     }

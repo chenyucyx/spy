@@ -48,7 +48,6 @@
 <br>
     <input type="button" value="扫描结果导出" id="export" style="display: none">
 </div>
-<div>${scanResult}</div>
 </body>
 
 <script type="text/javascript" charset="utf-8">
@@ -125,7 +124,6 @@
                     });
                     $('#scanTable').html(html);
                     $('#export').css('display', 'block');
-
                 }
             });
         });

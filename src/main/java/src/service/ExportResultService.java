@@ -1,21 +1,20 @@
 package src.service;
 
-import org.apache.poi.hssf.util.HSSFColor;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
-import src.model.Result;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import src.model.Result;
+
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lihaixin on 2017/6/27.
