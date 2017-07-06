@@ -7,7 +7,7 @@
 <h1>文件扫描主页</h1>
 <h5>扫描规则选取</h5>
 <div>
-    <select multiple="multiple" id="select1" style="width:100px;height:160px;">
+    <select multiple="multiple" id="select1" style="width:300px;height:160px;">
         #foreach(${rule} in ${ruleList})
             <option value='${rule.code}'>${rule.desc}</option>
         #end
@@ -16,7 +16,7 @@
     <input type="button" id="add" value="选中添加到右边>"/>
     <input type="button" id="add_all" value="全部添加到右边>>"/>
 
-    <select multiple="multiple" id="select2" style="width: 100px;height:160px;">
+    <select multiple="multiple" id="select2" style="width: 300px;height:160px;">
 
     </select>
 

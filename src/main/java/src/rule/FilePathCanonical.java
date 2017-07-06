@@ -1,6 +1,6 @@
 package src.rule;
 
-import org.osgi.service.component.annotations.Component;
+import org.springframework.stereotype.Component;
 import src.model.Result;
 
 import java.io.BufferedReader;
