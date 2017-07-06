@@ -19,26 +19,23 @@ import java.util.regex.Pattern;
  */
 @Component
 public class SqlInject {
+
     private int lineNum = 0;
+
     public  List<Result> sqlScan(File dir){
         File[] files = dir.listFiles();
         List<Result> lineNubs= new ArrayList<Result>();
         Pattern pattern = Pattern.compile("\\$\\{[\\s\\S]*\\}");
         for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                sqlScan(files[i]);
-            } else {
                 try {
                     if (files[i].getName().endsWith(".xml")) {
                         BufferedReader br = null;
                         br = new BufferedReader(new InputStreamReader(new FileInputStream(files[i])));
                         String lineContent="";
                         while ((lineContent=br.readLine()) != null) {
-
                             Matcher matcher = pattern.matcher(lineContent);
                             if(matcher.find()) {
                                 Result res= new Result();
-                                System.out.println("match"+lineContent);
                                 res.setBugType("SqlInject");
                                 res.setFileName(files[i].getName());
                                 res.setFileDirt(files[i].getAbsolutePath());
@@ -56,7 +53,7 @@ public class SqlInject {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+
         }
 
         return lineNubs;
