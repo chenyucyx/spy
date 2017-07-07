@@ -11,7 +11,8 @@ public enum RuleDefinition {
     COMMANDINJECT(4, "命令注入"),
     PASSWORDHARDCODE(5, "密码硬编码"),
     FILENOTSECURE(6,"文件不安全访问"),
-    SPRINGBOOTSPELINJECT(7,"springboot版本不安全");
+    SPRINGBOOTSPELINJECT(7,"springboot版本不安全"),
+    REGULAINJECT(8,"正则表达式注入风险");
 
     private Integer code;
     private String desc;

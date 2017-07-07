@@ -8,6 +8,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import src.model.Result;
+import src.model.RuleDefinition;
+import src.model.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,79 +18,31 @@ import java.util.List;
 /**
  * Created by chenyu on 2017/6/27.
  */
-public class MethodVisitor extends ASTVisitor {
-
-    private List resultList = new ArrayList<Result>();
-
-    private String fileName;
-
-    private String filePath;
-
+public class MethodVisitor extends Visitor {
 
     @Override
     public boolean visit(MethodDeclaration node) {
-        System.out.println("Method:\t" + node.getName());
-        SingleVariableDeclaration variableDeclaration = (SingleVariableDeclaration) node.parameters().get(0);
+        //System.out.println("Method:\t" + node.getName());
+        List<SingleVariableDeclaration> paramList = (List<SingleVariableDeclaration>) node.parameters();
         Block block = node.getBody();
         List statements = block.statements();
-        //System.out.println("statements:" + statements);
         for (int i = 0; i < statements.size(); i++) {
-
             Statement statement = (Statement) statements.get(i);
             //System.out.println("=======TYPE="+statement.getNodeType());
-            if (ASTNode.IF_STATEMENT == statement.getNodeType()) {
-                IfStatement ifStatement = (IfStatement) statement;
-
-                //System.out.println("IF="+ifStatement.getThenStatement());
-            }
-
-            if (ASTNode.VARIABLE_DECLARATION_STATEMENT == statement.getNodeType()) {
-                //statement=(ExpressionStatement)statement;
-               // System.out.println("VARIABLE_DECLARATION_STATEMENT:" + statement);
-            }
-
-            if (ASTNode.EXPRESSION_STATEMENT == statement.getNodeType()) {
-                //System.out.println("EXPRESSION_STATEMENT="+statement.toString());
-                ((ASTNode) statement).accept(new StatementVisitor());
-
-            }
-
+            paramList.stream().forEach(v -> {
+                if (statement.toString().contains(v.getName().toString())
+                        && statement.toString().contains("Pattern.matches")) {
+                    Result result = new Result();
+                    result.setLineNumber(node.getStartPosition());
+                    result.setFileDirt(this.getFilePath());
+                    result.setBugType(RuleDefinition.REGULAINJECT.getCode().toString());
+                    result.setDescription(RuleDefinition.REGULAINJECT.getDesc());
+                    result.setFileName(this.getFileName());
+                    this.getResultList().add(result);
+                }
+            });
         }
         return true;
     }
-
-
-    public MethodVisitor(String fileName, String filePath) {
-        this.fileName = fileName;
-        this.filePath = filePath;
-    }
-
-    public MethodVisitor() {
-    }
-
-    public List getResultList() {
-        return resultList;
-    }
-
-    public void setResultList(List resultList) {
-        this.resultList = resultList;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
 
 }

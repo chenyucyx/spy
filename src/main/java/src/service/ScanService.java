@@ -6,18 +6,22 @@ import src.model.Result;
 import src.model.RuleDefinition;
 import src.rule.CommandInject;
 import src.rule.FilePathCanonical;
+import src.rule.MethodInvocationVisitor;
 import src.rule.MethodVisitor;
 import src.rule.PasswordHardCode;
 import src.rule.SerializeVisitor;
 import src.rule.SpringBootSpELInject;
 import src.rule.SqlInject;
+import src.rule.StatementVisitor;
 import src.rule.XXEInject;
 import src.utils.JdtAstUtil;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
@@ -66,6 +70,10 @@ public class ScanService {
                 errorList.addAll(passwordHardCode.pswordHardScan(file));
             } else if (ruleList.contains(RuleDefinition.SPRINGBOOTSPELINJECT.getCode().toString())) {
                 errorList.addAll(springBootSpELInject.springSpELScan(file));
+            } else if (ruleList.contains(RuleDefinition.REGULAINJECT.getCode().toString())) {
+                MethodInvocationVisitor visitor = new MethodInvocationVisitor(file.getName(), file.getPath());
+                comp.accept(visitor);
+                errorList.addAll(visitor.getResultList());
             }
             file.delete();
         } else {
@@ -76,10 +84,19 @@ public class ScanService {
 
     public static void main(String[] args) {
         CompilationUnit comp = JdtAstUtil.getCompilationUnit("D:\\workspace\\spy\\src\\main\\java\\src\\service\\ScanService.java");
-        MethodVisitor methodVisitor = new MethodVisitor();
+        MethodInvocationVisitor methodInvocationVisitor = new MethodInvocationVisitor();
         String a = "", b = "";
         a = b + "fsfa";
-        comp.accept(methodVisitor);
+        comp.accept(methodInvocationVisitor);
+        //System.out.println(methodInvocationVisitor.getResultList().get(0));
+       List<Result> list = methodInvocationVisitor.getResultList();
+        list.stream().forEach(t->System.out.println(t.getDescription()+"|"+t.getBugType()));
+
+    }
+
+    public void testRegular(String regstr) {
+       //String tmp = "sdf" + regstr;
+        Pattern.matches(regstr, "sdf");
     }
 
 }
