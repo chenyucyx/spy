@@ -29,7 +29,7 @@ public class MethodVisitor extends Visitor {
         for (int i = 0; i < statements.size(); i++) {
             Statement statement = (Statement) statements.get(i);
             //System.out.println("=======TYPE="+statement.getNodeType());
-            paramList.stream().forEach(v -> {
+            paramList.forEach(v -> {
                 if (statement.toString().contains(v.getName().toString())
                         && statement.toString().contains("Pattern.matches")) {
                     Result result = new Result();
